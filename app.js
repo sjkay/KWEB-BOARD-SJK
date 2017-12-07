@@ -7,12 +7,24 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var board = require('./routes/board');
+var cookies = require('./routes/cookies');
+var login = require('./routes/login');
 
 var app = express();
+var expressSession = require('express-session');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//session
+app.use(expressSession({
+  secret: '@@KWEB@@',
+  resave: false,
+  saveUninitialized: true
+}));
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -23,7 +35,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/board', board);
 app.use('/users', users);
+app.use('/cookies', cookies);
+app.use('/login', login);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,5 +57,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
